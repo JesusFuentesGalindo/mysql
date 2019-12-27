@@ -1,0 +1,217 @@
+MySQL:
+
+Bases de Datos.
+
+Objetos:
+  Base de Datos(DDL).
+  Tablas(DDL).
+  Columnas(DDL).
+  Registros (DML).
+  Vistas.
+  Procedimientos Almacenados.
+  Triggers.
+
+Instrucciones básicas.
+
+Servidor-----
+help: Abre la ayuda de mysql.
+status: Te muestra el estatus del servidor.
+;: Finaliza una sentencia sql.
+/**/: Comentarios.
+
+Base de Datos-----
+SHOW DATABASES: Muestra las bases de datos.
+CREATE DATABASE `nombreDB`: Crea una base de datos.
+USE `nombreDB`: Usa una base de datos.
+DROP DATABAS `nombreDB`: Elimina una base de datos.
+
+Tablas-----
+SHOW TABLES: Muestra las tablas dentro de la base de datos.
+CREATE TABLE `nombreTabla`(
+  /*Definición de Columnas.*/ [/*Opciones de columna.*/],
+  [/*Restricciones de integridad*/];
+)[/*Opciones de tabla*/]: Crea una tabla.
+DESCRIBE `nombreTabla`: Describe la estructura de una tabla.
+DROP TABLE `nombreTabla`: Elimina una tabla.
+ALTER TABLE `nombreTabla` RENAME TO `nuevoNombreTabla`: Renombrar una tabla.
+
+Opciones de tabla.
+  ENGINE=InnoDb: Asigna el motor de la base de datos en InnoDB
+  Compatible con ACID transaccional.
+  ENGINE=MyIssam:
+
+Columnas-----
+ALTER TABLE `nombreTabla`
+CHANGE COLUMN `nombreColumna` /*Definición de Columnas.*/
+[/*Opciones de columna.*/]: Renombra una columna.
+ALTER TABLE `nombreTabla`
+MODIFY COLUMN `nombreColumna` /*Definición de Columnas.*/
+[/*Opciones de columna.*/]: Cambia la definición de una columna.
+ALTER TABLE `nombreTabla`
+ADD COLUMN `nombreColumna` /*Definición de Columnas.*/
+[/*Opciones de columna.*/]: Añade una columna a la tabla.
+ALTER TABLE `nombreTabla`
+ADD CONSTRAINT `nombre_constraint` [/*Restricciones de integridad*/]: Añade una restricción.
+ALTER TABLE `nombreTabla`
+DROP COLUMN `nombreColumna`: Elimina una columna.
+
+
+Definición de Columnas
+  Tipos:
+    - INT(n): Entero, se remplaza n por el número de cifras.
+    - VARCHAR(n): Cadena, se remplaza n por el número de caracteres.
+    - CHAR(n): Caracter, se remplaza n por el número de caracteres.
+    - FLOAT(n,d): Flotante,
+        se remplaza n por el número de cifras.
+        se remplaza d por el número de decimales.
+    - DATE: Fecha.
+    - TEXT: Hasta 65000 caracteres.
+    - MEDIUMTEXT: Hasta 16 millones de caracteres.
+    - LONGTEXT: Hasta 16 billones de caracteres.
+    - TIME:
+    - TIMESTAMP:
+    - TINYINT: Hasta 255.
+    - MEDIUMINT:
+    - BIGINT:
+
+Opciones de columna.
+  - NOT NULL: No permite nulos.
+  - NULL: Permite valores nulos.
+  - DEFAULT 'valor': Agrega un valor por defecto cuando se inserta un registro.
+  - AUTO_INCREMENT: Autoincrementa un campo.
+
+Restricciones de integridad.
+  - CONSTRAINT `nombre_restriccion` PRIMARY KEY(`campo`): Define una llave primaria.
+  - CONSTRAINT `nombre_restriccion` FOREIGN KEY(`campo`)
+    REFERENCES `nombreTabla`(`nombreColumna`): Define una llave foranea.
+      ON DELETE/UPDATE CASCADE: Elimina/Actualiza en cascada.
+      ON DELETE/UPDATE SET NULL: Elimina/Actualiza poner null.
+      ON DELETE/UPDATE NO ACTION: Elimina/Actualiza no hace nada.
+  - CONSTRAINT `nombre_restriccion` UNIQUE(`campo`): Define un campo como unico.
+
+Registros-----
+
+Crear.
+INSERT INTO `nombreTabla`(`nombreCol1`,`nombreCol2`)
+VALUES('val1','val2'): Insertar un registro.
+
+Leer.
+SELECT * FROM `nombreTabla`: Recupera todos los registros de la tabla.
+SELECT DISTINCT * FROM `nombreTabla`: Recupera todos los registros distintos de la tabla.
+SELECT `nombreCol1`,`nombreCol2` FROM `nombreTabla`: Recupera todos los registros con solo dos atributos.
+SELECT `nombreCol1` AS 'alias': Renombra un campo en la consulta.
+SELECT * FROM `nombreTabla` WHERE `nombreCol1`='val': Recupera todos los registros donde se cumpla la condición.
+  En WHERE se pueden utilizar:
+    Operadores relacionales.
+    Operadores lógicos.
+    Aritméticos.
+    Funciones.
+    Comodines.
+SELECT `nombreCol1`,`nombreCol2` FROM `nombreTabla`
+ORDER BY `nombreCol1`,`nombreCol2` [DESC/ASC]: Ordena de forma descendente/ascendente (ascendente por defecto).
+SELECT * FROM `nombreTabla`
+LIMIT 0,2: Limita el número de registros desde 0 y solo 2.
+SELECT COUNT(`nombreCol1`),`nombreCol2` FROM `nombreTabla`
+GROUP BY `nombreCol2`: Agrupamiento de registros.
+SELECT COUNT(`nombreCol1`),`nombreCol2` FROM `nombreTabla`
+GROUP BY `nombreCol2` HAVING COUNT(`nombreCol1`) <= val: Agrupamiento de registros que cumplen una condición.
+SELECT `nombreCol1` FROM `nombreTabla`
+WHERE `nombreCol1` IN (SELECT `nombreCol2` FROM `nombreTabla`): Subconsultas.
+SELECT c.nombreCol1,e.nombreCol1 FROM `nombreTabla1` c,`nombreTabla2` e
+WHERE c.id=e.id: Consulta multitabla.
+SELECT c.nombreCol1,e.nombreCol1 FROM `nombreTabla1` c
+INNER JOIN `nombreTabla2` e ON c.id=e.id
+INNER JOIN `nombreTabla3` x ON c.id=x.id: Consulta multitabla con inner join.
+SELECT c.nombreCol1,e.nombreCol1 FROM `nombreTabla1` c
+LEFT JOIN `nombreTabla2` e ON c.id=e.id: Consulta multitabla con left join.
+SELECT c.nombreCol1,e.nombreCol1 FROM `nombreTabla1` c
+RIGTH JOIN `nombreTabla2` e ON c.id=e.id: Consulta multitabla con rigth join.
+CREATE DEFINER='localhost'@'%' VIEW `nombreVista` AS
+SELECT c.nombreCol1,e.nombreCol1 FROM `nombreTabla1` c
+RIGTH JOIN `nombreTabla2` e ON c.id=e.id: Crea una viesta.
+DROP VIEW `nombreVista`: Eliminar una vista.
+Actualizar.
+UPDATE `nombreTabla`
+SET `nombreCol1`='val'
+WHERE `nombreCol2`='val': Actualiza un registro que cumpla una condición.
+
+Borrar.
+DELETE FROM `nombreTabla`
+WHERE `nombreCol1`='val': Elimina un registro.
+
+Vistas.
+
+
+Comodines.
+  %: 0 o varios caracteres.
+  _: 1 carácter.
+
+Operadores relacionales
+  =
+  !=
+  <
+  >
+  <=
+  >=
+  BETWEEN X AND Z
+  IN
+  LIKE
+  NOT LIKE
+
+Operadores lógicos.
+  OR: O.
+  AND: Y.
+  NOT: NO.
+  XOR: Not exclusivo.
+
+Operadores aritméticos.
+  SELECT 1+1: Suma.
+  SELECT 1-1: Resta.
+  SELECT 1*1: Multiplicación.
+  SELECT 1/1: División.
+  SELECT 1%1: Módulo.
+
+Funciones.
+  Matematicas.
+    ABS(): Valor absoluto.
+    CEIL(7.5): Redondeo al alza.
+    FLOOR(7.5): Redondeo al la baja.
+    PI(): Valor de PI.
+    RAND(): Número aleatorio.
+    ROUND(7.912,2): Redondear a número de decimales.
+    SQRT(7.91): Raíz cuadrada.
+    TRUNCATE(7.91,1): Quita decimales.
+  Texto.
+    UPPER(cadena): Texto a mayúscula.
+    LOWER(cadena): Texto a minúsculas.
+    CONCAT(cadena1,cadena2): Concatena cadenas.
+    LENGTH(cadena): Número de caracteres.
+    TRIM(cadena): Quita los espacios a la izq y der de la cadena.
+  Fechas.
+    CURDATE(): Muestra la fecha actual.
+    DATEDIFF(fecha1,fecha2): Dias de diferencia entre fecha1 y fecha2.
+    DAYOFMONTH(fecha): Muestra el día del mes de fecha.
+    DAYOFWEEK(fecha): Muestra el día de la semana de fecha.
+    DAYOFYEAR(fecha): Muestra el día del año de fecha.
+    MONTH(fecha): Muestra el mes de la fecha.
+    YEAR(fecha): Muestra el año de la fecha.
+    DAY(fecha): Muestra el día de la fecha.
+    HOUR(fecha): Muestra la hora de la fecha.
+    CURTIME(): Hora actual.
+    SYSDATE(): Fecha sistema operativo.
+    DATE_FORMAT(fecha,'%d-%m-%Y'): Formate una fecha.
+Genericas.
+  ISNULL(`nombreCampo`): Verifica si el campo tiene un valor null.
+  STRCMP(cadena1,cadena2): Compara cadena1 con cadena2.
+    Si es igual es false.
+    Si es diferente es true.
+  VERSION(): Versión del SGBD.
+  USER(): Ususario de la base de datos.
+  DATABASE(): Base de datos actual.
+  IFNULL(`nombreCampo`,'Valor if nul true'): Cambia el valor del campo si es null.
+Agrupamiento.
+  AVG(val): Media.
+  COUNT(val): Número de elementos.
+  MAX(val): Máximo.
+  MIN(val): Mínimo
+  SUM(val): Suma.
